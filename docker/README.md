@@ -18,8 +18,8 @@ docker run --rm \
   --entrypoint bash \
   "$IMAGE" -lc "
     set -euo pipefail
-    if command -v hf >/dev/null 2>&1; then hf download '$MODEL'
-    else huggingface-cli download '$MODEL'; fi
+    command -v hf >/dev/null 2>&1 || pip install -q -U huggingface_hub
+    hf download '$MODEL'
   "
 ```
 

@@ -10,14 +10,10 @@ mkdir -p "$HF_HOME"
 export HF_HOME HUGGINGFACE_HUB_CACHE="$HF_HOME"
 
 echo "== download ${MODEL} → ${HF_HOME} =="
-if command -v hf >/dev/null 2>&1; then
-  hf download "$MODEL"
-elif command -v huggingface-cli >/dev/null 2>&1; then
-  huggingface-cli download "$MODEL"
-else
-  pip install -q -U "huggingface_hub[cli]"
-  hf download "$MODEL"
+if ! command -v hf >/dev/null 2>&1; then
+  pip install -q -U huggingface_hub
 fi
+hf download "$MODEL"
 
 echo "Done. Cache is on the volume; stop the Pod or switch the start command to serve."
 # Keep the container alive if you want to SSH in and inspect:

@@ -43,13 +43,10 @@ docker run --rm \
   --entrypoint bash \
   "$IMAGE" -lc "
     set -euo pipefail
-    # 'hf' is the current CLI; huggingface-cli is the older name. Images in the
-    # wild still ship either, so try the new one and fall back.
-    if command -v hf >/dev/null 2>&1; then
-      hf download '$MODEL'
-    else
-      huggingface-cli download '$MODEL'
+    if ! command -v hf >/dev/null 2>&1; then
+      pip install -q -U huggingface_hub
     fi
+    hf download '$MODEL'
   "
 
 echo

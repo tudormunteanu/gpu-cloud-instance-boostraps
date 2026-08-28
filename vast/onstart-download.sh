@@ -12,13 +12,9 @@ mkdir -p "$HF_HOME"
 export HF_HOME HUGGINGFACE_HUB_CACHE="$HF_HOME"
 
 echo "== vast onstart: download ${MODEL} → ${HF_HOME} =="
-if command -v hf >/dev/null 2>&1; then
-  hf download "$MODEL"
-elif command -v huggingface-cli >/dev/null 2>&1; then
-  huggingface-cli download "$MODEL"
-else
-  pip install -q -U "huggingface_hub[cli]"
-  hf download "$MODEL"
+if ! command -v hf >/dev/null 2>&1; then
+  pip install -q -U huggingface_hub
 fi
+hf download "$MODEL"
 
 echo "Download done. SSH/Jupyter stay up; start serve yourself or swap on-start to onstart-serve-vllm.sh."
