@@ -18,8 +18,16 @@ docker run --rm \
   --entrypoint bash \
   "$IMAGE" -lc "
     set -euo pipefail
-    command -v hf >/dev/null 2>&1 || pip install -q -U huggingface_hub
-    hf download '$MODEL'
+    run_hf() {
+      if command -v hf >/dev/null 2>&1; then hf "$@";
+      elif command -v uvx >/dev/null 2>&1; then uvx hf "$@";
+      else
+        curl -LsSf https://hf.co/cli/install.sh | bash -s -- --exclude-skill
+        export PATH="${HOME}/.local/bin:${PATH}"
+        hf "$@"
+      fi
+    }
+    run_hf download '$MODEL'
   "
 ```
 
